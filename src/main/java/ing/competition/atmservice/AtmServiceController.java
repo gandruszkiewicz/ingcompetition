@@ -4,11 +4,8 @@ import ing.competition.atmservice.dtos.ATM;
 import ing.competition.atmservice.dtos.RequestType;
 import ing.competition.atmservice.dtos.Task;
 import ing.competition.atmservice.services.AtmService;
-import ing.competition.atmservice.services.AtmServiceImpl;
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.jboss.resteasy.reactive.RestQuery;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

@@ -19,8 +19,7 @@ public class ATM{
     public boolean equals(Object obj){
         if(obj instanceof ATM){
             ATM temp = (ATM)obj;
-            return String.valueOf(this.getRegion()).equals(String.valueOf(temp.getRegion()))
-                    && String.valueOf(this.getAtmId()).equals(String.valueOf(temp.getAtmId()));
+            return this.getRegion() == temp.getRegion() && this.getAtmId() == temp.getAtmId();
         }
         return false;
     }
