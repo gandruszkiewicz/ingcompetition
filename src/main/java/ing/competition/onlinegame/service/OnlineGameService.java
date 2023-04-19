@@ -5,6 +5,8 @@ import ing.competition.onlinegame.dtos.Group;
 import ing.competition.onlinegame.dtos.Order;
 import ing.competition.onlinegame.dtos.Players;
 
+import java.util.List;
+
 public interface OnlineGameService {
-    Clan[][] calculateOrder(Players players);
+    List<List<Clan>> calculateOrder(Players players);
 }

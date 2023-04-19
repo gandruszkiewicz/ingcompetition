@@ -10,11 +10,11 @@ import java.util.List;
 @Getter
 @Setter
 public class Group {
-    private List<Clan> clans;
+    private List<Clan> clans = new ArrayList<>();
     public Group(){
-        this.setClans(new ArrayList<>());
+
     }
     public Group(Clan clan){
-        this.setClans(List.of(clan));
+        this.clans.add(clan);
     }
 }

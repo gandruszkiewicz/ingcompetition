@@ -15,6 +15,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 @Path("/onlinegame")
 public class OnlineGameController {
@@ -24,7 +25,7 @@ public class OnlineGameController {
     @Path("calculate")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Clan[][] calculate(Players players) {
+    public List<List<Clan>> calculate(Players players) {
         return this.onlineGameService.calculateOrder(players);
     }
 }

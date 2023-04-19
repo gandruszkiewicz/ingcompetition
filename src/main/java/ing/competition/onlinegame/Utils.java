@@ -20,6 +20,11 @@ public class Utils {
                 .sorted(Comparators.sortByClanFactor())
                 .toArray(c -> new ClanStats[clanStats.length]);
     }
+    public static ClanStats[] sortByNumberOfPlayers(ClanStats[] clanStats){
+        return Arrays.stream(clanStats)
+                .sorted(Comparators.sortByNumberOfPlayers())
+                .toArray(c -> new ClanStats[clanStats.length]);
+    }
     public static int getGroupAvailableSlots(List<Clan> groupClans, int playerLimit){
         final int occupancy = groupClans.stream()
                 .map(Clan::getNumberOfPlayers)
