@@ -1,29 +1,21 @@
 package ing.competition.onlinegame;
 
 import ing.competition.onlinegame.dtos.Clan;
-import ing.competition.onlinegame.dtos.ClanStats;
 import ing.competition.onlinegame.dtos.Group;
+import ing.competition.onlinegame.queue.GameQueue;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class Utils {
-    public static ClanStats[] getClanStats(Clan[] clans){
+    public static Clan[] sortByClanFactor(Clan[] clans){
         return Arrays.stream(clans)
-                .map(ClanStats::new)
-                .toArray(c -> new ClanStats[clans.length]);
-    }
-    public static ClanStats[] sortByClanFactor(ClanStats[] clanStats){
-        return Arrays.stream(clanStats)
                 .sorted(Comparators.sortByClanFactor())
-                .toArray(c -> new ClanStats[clanStats.length]);
+                .toArray(Clan[]::new);
     }
-    public static ClanStats[] sortByNumberOfPlayers(ClanStats[] clanStats){
+    public static Clan[] sortByNumberOfPlayers(Clan[] clanStats){
         return Arrays.stream(clanStats)
                 .sorted(Comparators.sortByNumberOfPlayers())
-                .toArray(c -> new ClanStats[clanStats.length]);
+                .toArray(c -> new Clan[clanStats.length]);
     }
     public static int getGroupAvailableSlots(List<Clan> groupClans, int playerLimit){
         final int occupancy = groupClans.stream()
@@ -36,7 +28,7 @@ public class Utils {
         }
         return result;
     }
-    public static boolean isSomeNonInserted(List<ClanStats> clanStats){
-        return clanStats.stream().anyMatch(c -> !c.isInserted());
+    public static Optional<Clan> getElementByNumberOfPlayers(GameQueue<Clan> clanStatsQ, int numberOfPlayers){
+        return clanStatsQ.stream().filter(e -> e.getNumberOfPlayers() == numberOfPlayers).findFirst();
     }
 }

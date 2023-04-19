@@ -1,15 +1,16 @@
 package ing.competition.onlinegame.queue;
 
-import java.util.AbstractQueue;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 public class GameQueue <T> extends AbstractQueue<T> {
 
     private LinkedList<T> elements;
-    public GameQueue(T[] array){
-        this.elements = new LinkedList<>(Arrays.asList(array));
+    public GameQueue(List<T> list){
+        this.elements = new LinkedList<>(list);
+    }
+    public GameQueue(T first){
+        this.elements = new LinkedList<>();
+        this.elements.offer(first);
     }
     @Override
     public Iterator<T> iterator() {
