@@ -1,7 +1,6 @@
 package ing.competition.onlinegame;
 
 import ing.competition.onlinegame.dtos.Clan;
-import ing.competition.onlinegame.dtos.Group;
 import ing.competition.onlinegame.queue.GameQueue;
 
 import java.util.*;
@@ -30,5 +29,11 @@ public class Utils {
     }
     public static Optional<Clan> getElementByNumberOfPlayers(GameQueue<Clan> clanStatsQ, int numberOfPlayers){
         return clanStatsQ.stream().filter(e -> e.getNumberOfPlayers() == numberOfPlayers).findFirst();
+    }
+    public static boolean hasBiggerClan(GameQueue<Clan> clanStatsQ, int numberOfPlayers){
+        return clanStatsQ.stream().anyMatch(e -> e.getNumberOfPlayers() >= numberOfPlayers);
+    }
+    public static boolean hasMaxClan(GameQueue<Clan> clanStatsQ, int numberOfPlayers){
+        return clanStatsQ.stream().anyMatch(e -> e.getNumberOfPlayers() == numberOfPlayers);
     }
 }

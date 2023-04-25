@@ -54,26 +54,35 @@ public class OnlineGameServiceImpl implements OnlineGameService {
         int stillAvailableSlots = availableSlots;
         GameQueue<Clan> recentlyAddedQ = new GameQueue<>(groupClans.get(groupClans.size() - 1));
         Iterator<Clan> iterator = clanStatsQ.iterator();
-        while (stillAvailableSlots > 0){
+        while (stillAvailableSlots > 0 && groupClans.size() < playerLimit){
             boolean hasNext = iterator.hasNext();
             if(!hasNext){
-                 groupClans.remove(recentlyAddedQ.poll());
+                var polled = recentlyAddedQ.poll();
+                 groupClans.remove(polled);
             }
             Optional<Clan> clanStatOpt = Utils.getElementByNumberOfPlayers(clanStatsQ,stillAvailableSlots);
+            boolean hasMaxClan = Utils.hasMaxClan(clanStatsQ, playerLimit);
+            if(clanStatOpt.isEmpty() && stillAvailableSlots < playerLimit && recentlyAddedQ.size() > 0
+                    && availableSlots < playerLimit && hasMaxClan){
+                Clan lastAdded = groupClans.size() > 0 ? groupClans.get(groupClans.size() - 1) : null;
+                groupClans.remove(lastAdded);
+                recentlyAddedQ.remove(lastAdded);
+                stillAvailableSlots = Utils.getGroupAvailableSlots(groupClans.stream().toList(),playerLimit);
+                availableSlots = Utils.getGroupAvailableSlots(groupClans.stream().toList(),playerLimit);
+                continue;
+            }
             if(clanStatOpt.isEmpty()){
                 stillAvailableSlots--;
                 continue;
             }
             Clan clanStat = clanStatOpt.get();
-            if(recentlyAddedQ.contains(clanStat)){
-                clanStat = iterator.next();
+            if(recentlyAddedQ.contains(clanStat) || groupClans.contains(clanStat)){
+               stillAvailableSlots--;
+               continue;
             }
-            int clanNumberOfPlayers = clanStat.getNumberOfPlayers();
-            if(clanNumberOfPlayers <= availableSlots){
-                groupClans.add(clanStat);
-                recentlyAddedQ.offer(clanStat);
-                stillAvailableSlots = Utils.getGroupAvailableSlots(groupClans.stream().toList(),playerLimit);
-            }
+            groupClans.add(clanStat);
+            recentlyAddedQ.offer(clanStat);
+            stillAvailableSlots = Utils.getGroupAvailableSlots(groupClans.stream().toList(),playerLimit);
         }
         return recentlyAddedQ;
     }

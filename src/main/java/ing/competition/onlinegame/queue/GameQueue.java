@@ -32,7 +32,8 @@ public class GameQueue <T> extends AbstractQueue<T> {
     @Override
     public T poll() {
         Iterator<T> iter = elements.iterator();
-        T t = iter.next();
+        T t = null;
+        if(iter.hasNext()) t = iter.next();
         if(t != null){
             iter.remove();
             return t;

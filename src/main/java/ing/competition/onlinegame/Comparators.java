@@ -7,14 +7,17 @@ import java.util.Comparator;
 public class Comparators {
     public static Comparator<Clan> sortByClanFactor(){
         return Comparator.comparingDouble(Comparators::calculateClanFactor)
-                .reversed();
+                .thenComparingDouble(Comparators::getNumberOfPlayersReversed);
     }
     public static Comparator<Clan> sortByNumberOfPlayers(){
         return Comparator.comparing(Clan::getNumberOfPlayers)
                 .reversed();
     }
     public static double calculateClanFactor(Clan c){
-        return (double) c.getPoints() / c.getNumberOfPlayers();
+        return (double) (c.getPoints() / c.getNumberOfPlayers()) * (-1);
+    }
+    public static double getNumberOfPlayersReversed(Clan c){
+        return c.getNumberOfPlayers() * (-1);
     }
 }
 
