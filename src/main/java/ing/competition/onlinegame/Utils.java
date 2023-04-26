@@ -16,7 +16,7 @@ public class Utils {
                 .sorted(Comparators.sortByNumberOfPlayers())
                 .toArray(c -> new Clan[clanStats.length]);
     }
-    public static int getGroupAvailableSlots(List<Clan> groupClans, int playerLimit){
+    public static int getGroupAvailableSlots(GameQueue<Clan> groupClans, int playerLimit){
         final int occupancy = groupClans.stream()
                 .map(Clan::getNumberOfPlayers)
                 .mapToInt(np -> np)
