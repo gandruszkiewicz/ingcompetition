@@ -22,7 +22,7 @@ public class OnlineGameServiceImpl implements OnlineGameService {
             Group group = groups.get(groups.size() - 1);
             List<Clan> groupClans = new ArrayList<>();
             groupClans.add(clanStat);
-            GameQueue<Clan> clansToRemoveQ =this.fullfillGroup(
+            GameQueue<Clan> clansToRemoveQ =this.fullFillGroup(
                     groupClans,
                     clansQueue,
                     playersLimit);
@@ -36,7 +36,7 @@ public class OnlineGameServiceImpl implements OnlineGameService {
         return clanList;
     }
 
-    private GameQueue<Clan> fullfillGroup(List<Clan> groupClans,GameQueue<Clan> clanStatsQ, int playerLimit)  {
+    private GameQueue<Clan> fullFillGroup(List<Clan> groupClans,GameQueue<Clan> clanStatsQ, int playerLimit)  {
         int stillAvailableSlots = Utils.getGroupAvailableSlots(groupClans.stream().toList(),playerLimit);
         GameQueue<Clan> recentlyAddedQ = new GameQueue<>(groupClans.get(groupClans.size() - 1));
         Iterator<Clan> iterator = clanStatsQ.iterator();
