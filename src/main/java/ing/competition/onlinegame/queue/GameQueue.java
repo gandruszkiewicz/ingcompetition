@@ -29,6 +29,17 @@ public class GameQueue <T> extends AbstractQueue<T> {
         return true;
     }
 
+    /**
+     * Inserts specified list of elements into this queue
+     * @param list - list of elements to add
+     * @return true if the element was added to this queue, else false
+     */
+    public boolean bulkOffer(List<T> list){
+        if(list.isEmpty()) return false;
+        this.elements.addAll(list);
+        return true;
+    }
+
     @Override
     public T poll() {
         Iterator<T> iter = elements.iterator();

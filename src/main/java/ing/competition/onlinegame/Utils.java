@@ -27,10 +27,38 @@ public class Utils {
         }
         return result;
     }
-    public static Optional<Clan> getElementByNumberOfPlayers(GameQueue<Clan> clanStatsQ, GameQueue<Clan> recentlyAddedQ,
-                                                             int numberOfPlayers){
-        return clanStatsQ.stream().filter(e -> e.getNumberOfPlayers() == numberOfPlayers
-                && !recentlyAddedQ.contains(e)).findFirst();
+    public static Optional<Clan> getElementByNumberOfPlayers(GameQueue<Clan> clanQ, GameQueue<Clan> recentlyAddedQ,
+                                                          int maxNumberOfPlayers){
+        return clanQ.stream().filter(c -> c.getNumberOfPlayers() == maxNumberOfPlayers && !recentlyAddedQ.contains(c))
+                .findFirst();
+    }
+    public static List<Clan> getElementsByNumberOfPlayers(GameQueue<Clan> clanQ, GameQueue<Clan> recentlyAddedQ,
+                                                          int maxNumberOfPlayers){
+        List<Clan> result = new ArrayList<>();
+        Optional<Clan> maxClan = getElementByNumberOfPlayers(clanQ, recentlyAddedQ, maxNumberOfPlayers);
+        if(maxClan.isPresent()){
+            result.add(maxClan.get());
+            return result;
+        }
+        int resultPlayerSum = 0;
+        for (Clan clan : clanQ) {
+            int clanNumberOfPlayers = clan.getNumberOfPlayers();
+            boolean isRecentlyAdded = recentlyAddedQ.contains(clan);
+            if(isRecentlyAdded){
+                continue;
+            }
+            if(clanNumberOfPlayers == maxNumberOfPlayers && resultPlayerSum == 0 ){
+                result.add(clan);
+                break;
+            }else if((resultPlayerSum + clanNumberOfPlayers) <= maxNumberOfPlayers) {
+                result.add(clan);
+                resultPlayerSum = resultPlayerSum + clanNumberOfPlayers;
+            }
+            if(maxNumberOfPlayers == resultPlayerSum){
+                break;
+            }
+        }
+        return result;
     }
     public static boolean hasBiggerClan(GameQueue<Clan> clanStatsQ, int numberOfPlayers){
         return clanStatsQ.stream().anyMatch(e -> e.getNumberOfPlayers() >= numberOfPlayers);
