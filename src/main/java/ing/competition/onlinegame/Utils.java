@@ -27,8 +27,10 @@ public class Utils {
         }
         return result;
     }
-    public static Optional<Clan> getElementByNumberOfPlayers(GameQueue<Clan> clanStatsQ, int numberOfPlayers){
-        return clanStatsQ.stream().filter(e -> e.getNumberOfPlayers() == numberOfPlayers).findFirst();
+    public static Optional<Clan> getElementByNumberOfPlayers(GameQueue<Clan> clanStatsQ, GameQueue<Clan> recentlyAddedQ,
+                                                             int numberOfPlayers){
+        return clanStatsQ.stream().filter(e -> e.getNumberOfPlayers() == numberOfPlayers
+                && !recentlyAddedQ.contains(e)).findFirst();
     }
     public static boolean hasBiggerClan(GameQueue<Clan> clanStatsQ, int numberOfPlayers){
         return clanStatsQ.stream().anyMatch(e -> e.getNumberOfPlayers() >= numberOfPlayers);
