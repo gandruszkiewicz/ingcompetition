@@ -4,14 +4,17 @@ import java.util.*;
 
 public class GameQueue <T> extends AbstractQueue<T> {
 
-    private LinkedList<T> elements;
+    private final LinkedList<T> elements = new LinkedList<>();
     public GameQueue(List<T> list){
-        this.elements = new LinkedList<>(list);
+        this.elements.addAll(list);
     }
     public GameQueue(T first){
-        this.elements = new LinkedList<>();
         this.elements.offer(first);
     }
+    public GameQueue(GameQueue<T> queue){
+        this.elements.addAll(queue);
+    }
+    public GameQueue(){}
     @Override
     public Iterator<T> iterator() {
         return this.elements.iterator();

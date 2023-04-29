@@ -9,29 +9,29 @@ import java.util.*;
 
 @ApplicationScoped
 public class OnlineGameServiceImpl implements OnlineGameService {
-    public List<List<Clan>> calculateOrder(Players players){
+    public GameQueue<GameQueue<Clan>> calculateOrder(Players players){
         final int playersLimit = players.getGroupCount();
         final Clan[] clanStatsByFactor = Utils.sortByClanFactor(
                 players.getClans()
         );
         final GameQueue<Clan> clansQueue = new GameQueue<>(Arrays.stream(clanStatsByFactor).toList());
-        List<Group> groups = new ArrayList<>();
+        GameQueue<GameQueue<Clan>> groups = new GameQueue<>();
         while(!clansQueue.isEmpty()) {
             Clan clanStat = clansQueue.peek();
-            final Group newGroup = new Group();
+            GameQueue<Clan> newGroup = new GameQueue<>();
             GameQueue<Clan> clansToAddQ =this.fullFillGroup(
                     clanStat,
                     clansQueue,
                     playersLimit);
-            newGroup.setClans(clansToAddQ.stream().toList());
-            groups.add(newGroup);
             while (clansToAddQ.size() > 0){
                 Clan recentlyAdded = clansToAddQ.poll();
                 clansQueue.remove(recentlyAdded);
+                newGroup.offer(recentlyAdded);
             }
+            groups.offer(newGroup);
 
         }
-        return groups.stream().map(Group::getClans).toList();
+        return groups;
     }
 
     private GameQueue<Clan> fullFillGroup(Clan groupClan,GameQueue<Clan> clanStatsQ, int playerLimit)  {
