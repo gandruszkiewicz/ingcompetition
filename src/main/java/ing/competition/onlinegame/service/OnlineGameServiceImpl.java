@@ -1,8 +1,8 @@
 package ing.competition.onlinegame.service;
 
-import ing.competition.onlinegame.Utils;
 import ing.competition.onlinegame.dtos.*;
 import ing.competition.onlinegame.queue.GameQueue;
+import ing.competition.onlinegame.utils.GameQueueUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.*;
@@ -11,46 +11,48 @@ import java.util.*;
 public class OnlineGameServiceImpl implements OnlineGameService {
     public GameQueue<GameQueue<Clan>> calculateOrder(Players players){
         final int playersLimit = players.getGroupCount();
-        final Clan[] clanStatsByFactor = Utils.sortByClanFactor(
-                players.getClans()
-        );
-        final GameQueue<Clan> clansQueue = new GameQueue<>(Arrays.stream(clanStatsByFactor).toList());
-        GameQueue<GameQueue<Clan>> groups = new GameQueue<>();
-        while(!clansQueue.isEmpty()) {
-            Clan clanStat = clansQueue.peek();
-            GameQueue<Clan> newGroup = new GameQueue<>();
-            GameQueue<Clan> clansToAddQ =this.fullFillGroup(
-                    clanStat,
-                    clansQueue,
+        players.sortByClanFactorPlayersDesc();
+        final GameQueue<Clan> clansInputQ = new GameQueue<>(players.getClans());
+        final GameQueue<GameQueue<Clan>> order = new GameQueue<>();
+        while(!clansInputQ.isEmpty()) {
+            Clan clanIterPeek = clansInputQ.peek();
+            final GameQueue<Clan> newGroup = new GameQueue<>();
+            final GameQueue<Clan> clansToAddQ =this.getRestForTheGroup(
+                    clanIterPeek,
+                    clansInputQ,
                     playersLimit);
             while (clansToAddQ.size() > 0){
                 Clan recentlyAdded = clansToAddQ.poll();
-                clansQueue.remove(recentlyAdded);
+                clansInputQ.remove(recentlyAdded);
                 newGroup.offer(recentlyAdded);
             }
-            groups.offer(newGroup);
+            order.offer(newGroup);
 
         }
-        return groups;
+        return order;
     }
 
-    private GameQueue<Clan> fullFillGroup(Clan groupClan,GameQueue<Clan> clanStatsQ, int playerLimit)  {
-        GameQueue<Clan> recentlyAddedQ = new GameQueue<>(groupClan);
-        int stillAvailableSlots = Utils.getGroupAvailableSlots(recentlyAddedQ,playerLimit);
-        if(stillAvailableSlots == 0){
-            return recentlyAddedQ;
+    private GameQueue<Clan> getRestForTheGroup(Clan groupClan, GameQueue<Clan> clanStatsQ, int playerLimit)  {
+        final GameQueue<Clan> peekToAddQ = new GameQueue<>(groupClan);
+        int availableSlots = GameQueueUtils.getGroupAvailableSlots(peekToAddQ,playerLimit);
+        if(availableSlots == 0){
+            return peekToAddQ;
         }
-        boolean hasMaxClan = Utils.hasMaxClan(clanStatsQ, playerLimit);
-        List<Clan> clansToAdd = Utils.getElementsByNumberOfPlayers(clanStatsQ, recentlyAddedQ, stillAvailableSlots);
-        recentlyAddedQ.bulkOffer(clansToAdd);
-        stillAvailableSlots = Utils.getGroupAvailableSlots(recentlyAddedQ,playerLimit);
-        if(stillAvailableSlots != 0 && hasMaxClan){
-            Optional<Clan> maxClan = Utils.getElementByNumberOfPlayers(clanStatsQ,recentlyAddedQ,playerLimit);
+        List<Clan> clansToAdd = GameQueueUtils.getElementsByNumberOfPlayers(
+                clanStatsQ, peekToAddQ, availableSlots
+        );
+        peekToAddQ.bulkOffer(clansToAdd);
+        availableSlots = GameQueueUtils.getGroupAvailableSlots(peekToAddQ,playerLimit);
+        boolean hasMaxClan = GameQueueUtils.hasMaxClan(clanStatsQ, playerLimit);
+        if(availableSlots != 0 && hasMaxClan){
+            Optional<Clan> maxClan = GameQueueUtils.getElementByNumberOfPlayers(
+                    clanStatsQ,peekToAddQ,playerLimit
+            );
             if(maxClan.isPresent()){
-                recentlyAddedQ.clear();
-                recentlyAddedQ.offer(maxClan.get());
+                peekToAddQ.clear();
+                peekToAddQ.offer(maxClan.get());
             }
         }
-        return recentlyAddedQ;
+        return peekToAddQ;
     }
 }

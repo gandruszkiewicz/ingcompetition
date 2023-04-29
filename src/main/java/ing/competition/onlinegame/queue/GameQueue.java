@@ -1,9 +1,10 @@
 package ing.competition.onlinegame.queue;
 
+import ing.competition.onlinegame.dtos.Clan;
+
 import java.util.*;
 
 public class GameQueue <T> extends AbstractQueue<T> {
-
     private final LinkedList<T> elements = new LinkedList<>();
     public GameQueue(List<T> list){
         this.elements.addAll(list);

@@ -1,34 +1,29 @@
-package ing.competition.onlinegame;
+package ing.competition.onlinegame.utils;
 
 import ing.competition.onlinegame.dtos.Clan;
 import ing.competition.onlinegame.queue.GameQueue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-public class Utils {
-    public static Clan[] sortByClanFactor(Clan[] clans){
-        return Arrays.stream(clans)
-                .sorted(Comparators.sortByClanFactor())
-                .toArray(Clan[]::new);
-    }
-    public static Clan[] sortByNumberOfPlayers(Clan[] clanStats){
-        return Arrays.stream(clanStats)
-                .sorted(Comparators.sortByNumberOfPlayers())
-                .toArray(c -> new Clan[clanStats.length]);
-    }
-    public static int getGroupAvailableSlots(GameQueue<Clan> groupClans, int playerLimit){
-        final int occupancy = groupClans.stream()
-                .map(Clan::getNumberOfPlayers)
-                .mapToInt(np -> np)
-                .sum();
+public class GameQueueUtils {
+    public static int getGroupAvailableSlots(GameQueue<Clan> clansQ, int playerLimit){
+        final int occupancy = getOccupancy(clansQ);
         int result = playerLimit - occupancy;
         if(result < 0){
             throw new RuntimeException("Group is overloaded !!");
         }
         return result;
     }
+    public static int getOccupancy(GameQueue<Clan> clanQ){
+        return clanQ.stream()
+                .map(Clan::getNumberOfPlayers)
+                .mapToInt(np -> np)
+                .sum();
+    }
     public static Optional<Clan> getElementByNumberOfPlayers(GameQueue<Clan> clanQ, GameQueue<Clan> recentlyAddedQ,
-                                                          int maxNumberOfPlayers){
+                                                             int maxNumberOfPlayers){
         return clanQ.stream().filter(c -> c.getNumberOfPlayers() == maxNumberOfPlayers && !recentlyAddedQ.contains(c))
                 .findFirst();
     }
@@ -59,9 +54,6 @@ public class Utils {
             }
         }
         return result;
-    }
-    public static boolean hasBiggerClan(GameQueue<Clan> clanStatsQ, int numberOfPlayers){
-        return clanStatsQ.stream().anyMatch(e -> e.getNumberOfPlayers() >= numberOfPlayers);
     }
     public static boolean hasMaxClan(GameQueue<Clan> clanStatsQ, int numberOfPlayers){
         return clanStatsQ.stream().anyMatch(e -> e.getNumberOfPlayers() == numberOfPlayers);

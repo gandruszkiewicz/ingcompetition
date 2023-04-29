@@ -1,4 +1,4 @@
-package ing.competition.atmservice;
+package ing.competition.atmservice.comparators;
 
 import ing.competition.atmservice.dtos.ATM;
 import java.util.Comparator;
