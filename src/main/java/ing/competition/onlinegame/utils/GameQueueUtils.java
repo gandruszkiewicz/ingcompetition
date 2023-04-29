@@ -16,29 +16,45 @@ public class GameQueueUtils {
         }
         return result;
     }
+
+    /**
+     * Get number of players in whole queue.
+     * @param clanQ - queue from which occupancy will be calculated.
+     * @return number of players in queue.
+     */
     public static int getOccupancy(GameQueue<Clan> clanQ){
         return clanQ.stream()
                 .map(Clan::getNumberOfPlayers)
                 .mapToInt(np -> np)
                 .sum();
     }
-    public static Optional<Clan> getElementByNumberOfPlayers(GameQueue<Clan> clanQ, GameQueue<Clan> recentlyAddedQ,
-                                                             int maxNumberOfPlayers){
+
+    public static Optional<Clan> geClanByNumberOfPlayers(GameQueue<Clan> clanQ, GameQueue<Clan> recentlyAddedQ,
+                                                         int maxNumberOfPlayers){
         return clanQ.stream().filter(c -> c.getNumberOfPlayers() == maxNumberOfPlayers && !recentlyAddedQ.contains(c))
                 .findFirst();
     }
-    public static List<Clan> getElementsByNumberOfPlayers(GameQueue<Clan> clanQ, GameQueue<Clan> recentlyAddedQ,
+
+    /**
+     * Method returns clan list handling two strategies.
+     * Returns clan that fulfill all slots or collection which of smaller clans from queue.
+     * @param clanInputQ input queue of clans.
+     * @param peekToAddQ clans chosen to new group.
+     * @param maxNumberOfPlayers maximum number of players in group.
+     * @return list of clans that maximize group by number of players and factor points / players.
+     */
+    public static List<Clan> getElementsByNumberOfPlayers(GameQueue<Clan> clanInputQ, GameQueue<Clan> peekToAddQ,
                                                           int maxNumberOfPlayers){
         List<Clan> result = new ArrayList<>();
-        Optional<Clan> maxClan = getElementByNumberOfPlayers(clanQ, recentlyAddedQ, maxNumberOfPlayers);
+        Optional<Clan> maxClan = geClanByNumberOfPlayers(clanInputQ, peekToAddQ, maxNumberOfPlayers);
         if(maxClan.isPresent()){
             result.add(maxClan.get());
             return result;
         }
         int resultPlayerSum = 0;
-        for (Clan clan : clanQ) {
+        for (Clan clan : clanInputQ) {
             int clanNumberOfPlayers = clan.getNumberOfPlayers();
-            boolean isRecentlyAdded = recentlyAddedQ.contains(clan);
+            boolean isRecentlyAdded = peekToAddQ.contains(clan);
             if(isRecentlyAdded){
                 continue;
             }
