@@ -1,13 +1,19 @@
 package ing.competition.onlinegame.utils;
 
+import ing.competition.onlinegame.comparators.Comparators;
 import ing.competition.onlinegame.dtos.Clan;
 import ing.competition.onlinegame.queue.GameQueue;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Slf4j
 public class GameQueueUtils {
+    public static int iterationNumbers = 0;
+    public static ArrayList<Integer> iterList = new ArrayList<Integer>();
     public static int getGroupAvailableSlots(GameQueue<Clan> clansQ, int playerLimit){
         final int occupancy = getOccupancy(clansQ);
         int result = playerLimit - occupancy;
@@ -45,32 +51,38 @@ public class GameQueueUtils {
      */
     public static List<Clan> getElementsByNumberOfPlayers(GameQueue<Clan> clanInputQ, GameQueue<Clan> peekToAddQ,
                                                           int maxNumberOfPlayers){
-        List<Clan> result = new ArrayList<>();
+        List<Clan> clansToAdd = new ArrayList<>();
         Optional<Clan> maxClan = geClanByNumberOfPlayers(clanInputQ, peekToAddQ, maxNumberOfPlayers);
-        if(maxClan.isPresent()){
-            result.add(maxClan.get());
-            return result;
+        if (maxClan.isPresent()) {
+            clansToAdd.add(maxClan.get());
+            return clansToAdd;
         }
-        int resultPlayerSum = 0;
-        for (Clan clan : clanInputQ) {
-            int clanNumberOfPlayers = clan.getNumberOfPlayers();
+        int totalNumberOfPlayers = peekToAddQ.stream()
+                .map(Clan::getNumberOfPlayers).mapToInt(p -> p).sum();
+        int iterations = 0;
+        var sorted = clanInputQ.stream().sorted(Comparators.sortByNumberOfPlayersDesc()).toList();
+        for (Clan clan : sorted.stream().filter(c -> c.getNumberOfPlayers() <= maxNumberOfPlayers).toList()) {
+            iterations++;
+            int numberOfPlayers = clan.getNumberOfPlayers();
             boolean isRecentlyAdded = peekToAddQ.contains(clan);
-            if(isRecentlyAdded){
+            if (isRecentlyAdded) {
                 continue;
             }
-            if(clanNumberOfPlayers == maxNumberOfPlayers && resultPlayerSum == 0 ){
-                result.add(clan);
+            if (numberOfPlayers == maxNumberOfPlayers && totalNumberOfPlayers == 0) {
+                clansToAdd.add(clan);
                 break;
-            }else if((resultPlayerSum + clanNumberOfPlayers) <= maxNumberOfPlayers) {
-                result.add(clan);
-                resultPlayerSum = resultPlayerSum + clanNumberOfPlayers;
+            } else if ((totalNumberOfPlayers + numberOfPlayers) <= maxNumberOfPlayers) {
+                clansToAdd.add(clan);
+                totalNumberOfPlayers += numberOfPlayers;
             }
-            if(maxNumberOfPlayers == resultPlayerSum){
+            if (maxNumberOfPlayers == totalNumberOfPlayers || iterations >= clanInputQ.size()) {
                 break;
             }
         }
-        return result;
+        iterList.add(iterations);
+        return clansToAdd;
     }
+
     public static boolean hasMaxClan(GameQueue<Clan> clanStatsQ, int numberOfPlayers){
         return clanStatsQ.stream().anyMatch(e -> e.getNumberOfPlayers() == numberOfPlayers);
     }

@@ -10,5 +10,8 @@ public class Comparators {
         return Comparator.comparingDouble(ClanUtils::calculateClanFactor)
                 .thenComparingDouble(ClanUtils::getNumberOfPlayersReversed);
     }
+    public static Comparator<Clan> sortByNumberOfPlayersDesc(){
+        return Comparator.comparingDouble(ClanUtils::getNumberOfPlayersReversed);
+    }
 }
 

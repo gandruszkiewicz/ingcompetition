@@ -6,6 +6,7 @@ import ing.competition.onlinegame.utils.GameQueueUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 @ApplicationScoped
 public class OnlineGameServiceImpl implements OnlineGameService {
@@ -35,6 +36,27 @@ public class OnlineGameServiceImpl implements OnlineGameService {
 
         }
         return order;
+    }
+
+    public Players generatePlayers(int groupCount, int numberOfClans){
+        final Players players = new Players();
+        final List<Clan> clans = new ArrayList<>();
+        int maxPoints = 100000;
+        players.setGroupCount(groupCount);
+        for (int index = 0; index < numberOfClans; index++) {
+            Random random = new Random();
+            Clan clan = new Clan();
+            int points = random.nextInt(maxPoints-1) + 1;
+            int numberOfPlayers = random.nextInt(groupCount);
+            if(points == 0 || numberOfPlayers == 0){
+                continue;
+            }
+            clan.setPoints(points);
+            clan.setNumberOfPlayers(numberOfPlayers);
+            clans.add(clan);
+        }
+        players.setClans(clans);
+        return players;
     }
 
     private GameQueue<Clan> getClansForGroup(GameQueue<Clan> clansInputQ, int playerLimit)  {

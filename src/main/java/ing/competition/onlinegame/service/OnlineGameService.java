@@ -6,4 +6,5 @@ import ing.competition.onlinegame.queue.GameQueue;
 
 public interface OnlineGameService {
     GameQueue<GameQueue<Clan>> calculateOrder(Players players);
+    Players generatePlayers(int groupCount, int numberOfClans);
 }

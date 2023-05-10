@@ -32,6 +32,9 @@ public class GameQueue <T> extends AbstractQueue<T> {
         this.elements.add(t);
         return true;
     }
+    public T get(int index){
+        return this.elements.get(index);
+    }
 
     /**
      * Inserts specified list of elements into this queue
