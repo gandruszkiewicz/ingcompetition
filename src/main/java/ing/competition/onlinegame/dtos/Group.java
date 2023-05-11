@@ -1,20 +1,61 @@
 package ing.competition.onlinegame.dtos;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Getter
-@Setter
-public class Group {
-    private List<Clan> clans = new ArrayList<>();
-    public Group(){
-
+public class Group extends AbstractQueue<Clan> {
+    private final LinkedList<Clan> elements = new LinkedList<>();
+    public Group(List<Clan> list){
+        this.elements.addAll(list);
     }
-    public Group(Clan clan){
-        this.clans.add(clan);
+    public Group(){}
+    @Override
+    public Iterator<Clan> iterator() {
+        return this.elements.iterator();
+    }
+
+    @Override
+    public int size() {
+        return elements.size();
+    }
+
+    public int getNumberOfPlayers(){
+        return elements.stream().map(Clan::getNumberOfPlayers).mapToInt(p -> p).sum();
+    }
+
+    @Override
+    public boolean offer(Clan t) {
+        if(t == null) return false;
+        this.elements.add(t);
+        return true;
+    }
+    public Clan get(int index){
+        return this.elements.get(index);
+    }
+
+    @Override
+    public Clan poll() {
+        Iterator<Clan> iter = elements.iterator();
+        Clan t = null;
+        if(iter.hasNext()) t = iter.next();
+        if(t != null){
+            iter.remove();
+            return t;
+        }
+        return null;
+    }
+
+    @Override
+    public Clan peek() {
+        return this.elements.getLast();
+    }
+
+    /**
+     * Get number of players in whole queue.
+     * @return number of players in queue.
+     */
+    public int getOccupancy(){
+        return this.elements.stream().map(Clan::getNumberOfPlayers)
+                .mapToInt(np -> np)
+                .sum();
     }
 }

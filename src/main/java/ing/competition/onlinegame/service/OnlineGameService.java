@@ -1,10 +1,11 @@
 package ing.competition.onlinegame.service;
 
-import ing.competition.onlinegame.dtos.Clan;
 import ing.competition.onlinegame.dtos.Players;
-import ing.competition.onlinegame.queue.GameQueue;
+import ing.competition.onlinegame.dtos.Group;
+
+import java.util.Queue;
 
 public interface OnlineGameService {
-    GameQueue<GameQueue<Clan>> calculateOrder(Players players);
+    Queue<Group> calculateOrder(Players players);
     Players generatePlayers(int groupCount, int numberOfClans);
 }

@@ -7,11 +7,8 @@ import java.util.Comparator;
 
 public class Comparators {
     public static Comparator<Clan> sortByClanFactorPlayersDesc(){
-        return Comparator.comparingDouble(ClanUtils::calculateClanFactor)
+        return Comparator.comparingDouble(ClanUtils::calculateClanFactorReversed)
                 .thenComparingDouble(ClanUtils::getNumberOfPlayersReversed);
-    }
-    public static Comparator<Clan> sortByNumberOfPlayersDesc(){
-        return Comparator.comparingDouble(ClanUtils::getNumberOfPlayersReversed);
     }
 }
 
