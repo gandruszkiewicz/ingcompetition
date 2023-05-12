@@ -9,12 +9,12 @@ import java.util.*;
 
 @ApplicationScoped
 public class OnlineGameServiceImpl implements OnlineGameService {
-    public Queue<Group> calculateOrder(Players players){
+    public Order calculateOrder(Players players){
         final int playersLimit = players.getGroupCount();
         // 1. Sort desc collection of clans by factor - points divide on number of players.
         // This give us information of clan strength.
         // Then by number of players desc. This will help to fulfill maximum number of groups.
-        players.sortByClanFactorPlayersDesc();
+        players.sortByClanFactor();
         // 2. Create queues, first is input queue from which will be populated order queue.
         final Group clansInputQ = new Group(players.getClans());
         final Order order = new Order(new Group());
@@ -33,10 +33,9 @@ public class OnlineGameServiceImpl implements OnlineGameService {
         order.compareLastTwoAddedGroups();
         return order;
     }
-    public Players generatePlayers(int groupCount, int numberOfClans){
+    public Players generatePlayers(int groupCount, int numberOfClans, int maxPoints){
         final Players players = new Players();
         final List<Clan> clans = new ArrayList<>();
-        int maxPoints = 100000;
         players.setGroupCount(groupCount);
         for (int index = 0; index < numberOfClans; index++) {
             Random random = new Random();

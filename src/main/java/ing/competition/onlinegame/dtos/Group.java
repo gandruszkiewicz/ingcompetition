@@ -58,4 +58,18 @@ public class Group extends AbstractQueue<Clan> {
                 .mapToInt(np -> np)
                 .sum();
     }
+    public List<Clan> getClanList(){
+        return this.elements.stream().toList();
+    }
+    public double getGroupFactor(){
+        double numberOfPlayers = this.getNumberOfPlayers();
+        double groupPoints = this.getGroupPoints();
+        return groupPoints / numberOfPlayers;
+    }
+    private double getGroupPoints(){
+        return this.elements.stream()
+                .map(Clan::getPoints)
+                .mapToDouble(p -> p)
+                .sum();
+    }
 }

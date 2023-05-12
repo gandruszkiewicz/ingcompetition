@@ -11,9 +11,9 @@ import java.util.List;
 public class Players {
     private int groupCount;
     private List<Clan> clans;
-    public void sortByClanFactorPlayersDesc(){
+    public void sortByClanFactor(){
         this.setClans(
-                this.clans.stream().sorted(Comparators.sortByClanFactorPlayersDesc())
+                this.clans.stream().sorted(Comparators.sortByClanFactorDesc())
                         .toList()
         );
     }

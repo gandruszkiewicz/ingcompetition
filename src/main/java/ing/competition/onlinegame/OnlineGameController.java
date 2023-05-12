@@ -26,9 +26,15 @@ public class OnlineGameController {
     @GET
     @Path("calculate/test")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Players testCalculate(@RestQuery int groupCount, @RestQuery int numberOfClans) {
+    public Players testCalculate(@RestQuery int groupCount,
+                                 @RestQuery int numberOfClans,
+                                 @RestQuery int maxPoints) {
 
-        return this.onlineGameService.generatePlayers(groupCount, numberOfClans);
+        return this.onlineGameService.generatePlayers(
+                groupCount,
+                numberOfClans,
+                maxPoints)
+        ;
     }
 
 }

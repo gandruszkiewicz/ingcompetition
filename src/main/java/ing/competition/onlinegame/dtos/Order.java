@@ -52,10 +52,17 @@ public class Order extends AbstractQueue<Group> {
         return this.elements.getLast();
     }
 
+    public Group get(int index){
+        return this.elements.get(index);
+    }
+
     public void compareLastTwoAddedGroups(){
         Group last = this.elements.getLast();
         int nextToLastIndex = this.elements.size() - 2;
         int lastIndex = this.elements.size() - 1;
+        if(lastIndex == 16){
+            System.console();
+        }
         if(nextToLastIndex < 0 || lastIndex == 0){
             return;
         }
