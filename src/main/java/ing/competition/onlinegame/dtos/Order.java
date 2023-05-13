@@ -96,9 +96,6 @@ public class Order extends AbstractQueue<Group> {
         Group last = this.elements.getLast();
         int lastIndex = this.elements.size() - 1;
         int nextToLastIndex = this.elements.size() - 2;
-        if(lastIndex == 81){
-            System.console();
-        }
         if(nextToLastIndex < 0 || lastIndex == 0){
             return;
         }

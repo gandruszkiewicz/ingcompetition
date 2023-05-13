@@ -24,11 +24,6 @@ public class OnlineGameServiceImpl implements OnlineGameService {
             int availableSlots = GameQueueUtils.getGroupAvailableSlots(currentGroup,playersLimit);
             if(clanToAdd.getNumberOfPlayers() <= availableSlots){
                 currentGroup.offer(clanToAdd);
-                try{
-                    availableSlots = GameQueueUtils.getGroupAvailableSlots(currentGroup,playersLimit);
-                }catch (Exception ex){
-                    throw ex;
-                }
             }else{
                 Group newGroup = new Group();
                 newGroup.offer(clanToAdd);
