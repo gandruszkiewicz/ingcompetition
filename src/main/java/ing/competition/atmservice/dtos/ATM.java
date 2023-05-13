@@ -5,8 +5,8 @@ import lombok.Getter;
 
 @Getter
 public class ATM {
-    private int region;
-    private int atmId;
+    private final int region;
+    private final int atmId;
 
     public ATM(int region, int atmId) {
         this.region = region;
