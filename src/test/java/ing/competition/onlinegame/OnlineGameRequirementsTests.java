@@ -12,29 +12,30 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
-import java.util.ConcurrentModificationException;
 
 @Slf4j
 @QuarkusTest
 public class OnlineGameRequirementsTests {
     private final OnlineGameService onlineGameService;
     private final ObjectMapper objectMapper;
+
     @Inject
-    public OnlineGameRequirementsTests(OnlineGameService onlineGameService, ObjectMapper objectMapper){
+    public OnlineGameRequirementsTests(OnlineGameService onlineGameService, ObjectMapper objectMapper) {
         this.onlineGameService = onlineGameService;
         this.objectMapper = objectMapper;
     }
+
     @Test
     public void testGroups() throws JsonProcessingException {
         Players players = this.onlineGameService
-                .generatePlayers(10,100, 100);
+                .generatePlayers(10, 100, 100);
         Order order = this.onlineGameService.calculateOrder(players);
         boolean hasOrderGroupEvalPos = true;
         for (int index = 0; index < order.size(); index++) {
-            if(index == 0) continue;
+            if (index == 0) continue;
             Group currentGroup = order.get(index);
             boolean currentGroupEval = OnlineGameTestUtils.evaluateGroup(currentGroup);
-            if(!currentGroupEval){
+            if (!currentGroupEval) {
                 this.wrongGroupEval(currentGroup);
                 hasOrderGroupEvalPos = false;
                 break;
@@ -42,23 +43,24 @@ public class OnlineGameRequirementsTests {
         }
         Assertions.assertTrue(hasOrderGroupEvalPos);
     }
+
     @Test
     public void testOrder() throws JsonProcessingException {
 
         Players players = this.onlineGameService.generatePlayers(
-                1000,20000,1000
+                1000, 20000, 1000
         );
         Order order = this.onlineGameService.calculateOrder(players);
         boolean testOrderPos = true;
         for (int index = 0; index < order.size(); index++) {
-            if(index == 0) continue;
-            Group beforeGroup = order.get(index -1);
+            if (index == 0) continue;
+            Group beforeGroup = order.get(index - 1);
             Group currentGroup = order.get(index);
 
             //Check is before group stronger or have more players.
             boolean isBeforeGroupStronger = beforeGroup.getGroupFactor() > currentGroup.getGroupFactor();
             boolean isBeforeGroupMoreNumerousOrEq = beforeGroup.getNumberOfPlayers() >= currentGroup.getNumberOfPlayers();
-            if(!(isBeforeGroupStronger || isBeforeGroupMoreNumerousOrEq)){
+            if (!(isBeforeGroupStronger || isBeforeGroupMoreNumerousOrEq)) {
                 testOrderPos = false;
                 this.wrongOrderEval(beforeGroup, currentGroup);
                 break;
@@ -66,6 +68,7 @@ public class OnlineGameRequirementsTests {
         }
         Assertions.assertTrue(testOrderPos);
     }
+
     private void wrongOrderEval(Group beforeGroup, Group currentGroup) throws JsonProcessingException {
         String beforeGroupJson = this.objectMapper.writeValueAsString(beforeGroup.getClanList());
         String currentGroupJson = this.objectMapper.writeValueAsString(currentGroup.getClanList());
@@ -73,11 +76,13 @@ public class OnlineGameRequirementsTests {
                 beforeGroupJson, currentGroupJson
         );
     }
+
     private void wrongGroupEval(Group group) throws JsonProcessingException {
         String groupJson = this.objectMapper.writeValueAsString(group.getClanList());
-        log.debug("Group has wrong order {}",groupJson);
+        log.debug("Group has wrong order {}", groupJson);
     }
-    private String getJsonPlayers(){
+
+    private String getJsonPlayers() {
         return "{\n" +
                 "    \"groupCount\": 4,\n" +
                 "    \"clans\": [\n" +

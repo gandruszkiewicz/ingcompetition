@@ -9,12 +9,14 @@ public class Task {
     private RequestType requestType;
     private int region;
     private int atmId;
-    public Task(RequestType requestType, int region, int atmId){
+
+    public Task(RequestType requestType, int region, int atmId) {
         this.requestType = requestType;
         this.region = region;
         this.atmId = atmId;
     }
-    public Task(){
+
+    public Task() {
 
     }
 }

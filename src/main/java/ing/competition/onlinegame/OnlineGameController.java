@@ -1,7 +1,7 @@
 package ing.competition.onlinegame;
 
-import ing.competition.onlinegame.dtos.Players;
 import ing.competition.onlinegame.dtos.Group;
+import ing.competition.onlinegame.dtos.Players;
 import ing.competition.onlinegame.service.OnlineGameService;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.resteasy.reactive.RestQuery;
@@ -16,6 +16,7 @@ import java.util.Queue;
 public class OnlineGameController {
     @Inject
     OnlineGameService onlineGameService;
+
     @POST
     @Path("calculate")
     @Produces(MediaType.APPLICATION_JSON)
@@ -23,6 +24,7 @@ public class OnlineGameController {
     public Queue<Group> calculate(Players players) {
         return this.onlineGameService.calculateOrder(players);
     }
+
     @GET
     @Path("calculate/test")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -34,7 +36,7 @@ public class OnlineGameController {
                 groupCount,
                 numberOfClans,
                 maxPoints)
-        ;
+                ;
     }
 
 }
