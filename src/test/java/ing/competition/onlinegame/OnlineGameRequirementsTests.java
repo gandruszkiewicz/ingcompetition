@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
+import java.util.ConcurrentModificationException;
 
 @Slf4j
 @QuarkusTest
@@ -43,9 +44,10 @@ public class OnlineGameRequirementsTests {
     }
     @Test
     public void testOrder() throws JsonProcessingException {
-        String json = this.getJsonPlayers();
 
-        Players players = this.objectMapper.readValue(json, Players.class);
+        Players players = this.onlineGameService.generatePlayers(
+                1000,20000,1000
+        );
         Order order = this.onlineGameService.calculateOrder(players);
         boolean testOrderPos = true;
         for (int index = 0; index < order.size(); index++) {
@@ -55,8 +57,8 @@ public class OnlineGameRequirementsTests {
 
             //Check is before group stronger or have more players.
             boolean isBeforeGroupStronger = beforeGroup.getGroupFactor() > currentGroup.getGroupFactor();
-            boolean isBeforeGroupMoreNumerous = beforeGroup.getNumberOfPlayers() > currentGroup.getNumberOfPlayers();
-            if(!(isBeforeGroupStronger || isBeforeGroupMoreNumerous)){
+            boolean isBeforeGroupMoreNumerousOrEq = beforeGroup.getNumberOfPlayers() >= currentGroup.getNumberOfPlayers();
+            if(!(isBeforeGroupStronger || isBeforeGroupMoreNumerousOrEq)){
                 testOrderPos = false;
                 this.wrongOrderEval(beforeGroup, currentGroup);
                 break;

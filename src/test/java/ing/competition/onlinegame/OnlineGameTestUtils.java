@@ -10,7 +10,7 @@ public class OnlineGameTestUtils {
     public static boolean evaluateGroup(Group group){
         List<Clan> groupClans = group.getClanList();
         List<Clan> clansOrdered = group.stream()
-                .sorted(Comparators.sortByClanFactorDesc())
+                .sorted(Comparators.sortClanByClanFactorDesc())
                 .toList();
         boolean isPositive = true;
         for (int index = 0; index < clansOrdered.size(); index++) {

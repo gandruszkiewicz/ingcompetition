@@ -13,7 +13,7 @@ public class Players {
     private List<Clan> clans;
     public void sortByClanFactor(){
         this.setClans(
-                this.clans.stream().sorted(Comparators.sortByClanFactorDesc())
+                this.clans.stream().sorted(Comparators.sortClanByClanFactorDesc())
                         .toList()
         );
     }

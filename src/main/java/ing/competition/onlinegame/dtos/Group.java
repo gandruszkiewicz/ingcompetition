@@ -19,7 +19,11 @@ public class Group extends AbstractQueue<Clan> {
     }
 
     public int getNumberOfPlayers(){
-        return elements.stream().map(Clan::getNumberOfPlayers).mapToInt(p -> p).sum();
+        var result = elements.stream().map(Clan::getNumberOfPlayers).mapToInt(p -> p).sum();
+        return result;
+    }
+    public int getNumberOfPlayersReversed(){
+        return this.getNumberOfPlayers() * (-1);
     }
 
     @Override
@@ -62,9 +66,26 @@ public class Group extends AbstractQueue<Clan> {
         return this.elements.stream().toList();
     }
     public double getGroupFactor(){
-        double numberOfPlayers = this.getNumberOfPlayers();
-        double groupPoints = this.getGroupPoints();
+        double numberOfPlayers = Double.parseDouble(String.valueOf(this.getNumberOfPlayers()));
+        double groupPoints = Double.parseDouble(String.valueOf(this.getGroupPoints()));
         return groupPoints / numberOfPlayers;
+    }
+    public double getGroupFactorReversed(){
+        return this.getGroupFactor() * (-1);
+    }
+    public List<Clan> getByNumerOfPlayers(int numberOfPlayers){
+        int sumOfSelectedPlayers = 0;
+        ArrayList<Clan> clansToGet = new ArrayList<>();
+        for (Clan clan :this.elements) {
+            int clanNumberOfPlayers = clan.getNumberOfPlayers();
+            if((sumOfSelectedPlayers + clanNumberOfPlayers) <= numberOfPlayers){
+                sumOfSelectedPlayers += clan.getNumberOfPlayers();
+                clansToGet.add(clan);
+            }
+        }
+        this.elements.removeAll(clansToGet);
+        Collections.reverse(clansToGet);
+        return clansToGet;
     }
     private double getGroupPoints(){
         return this.elements.stream()

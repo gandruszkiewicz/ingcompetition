@@ -17,13 +17,18 @@ public class OnlineGameServiceImpl implements OnlineGameService {
         players.sortByClanFactor();
         // 2. Create queues, first is input queue from which will be populated order queue.
         final Group clansInputQ = new Group(players.getClans());
-        final Order order = new Order(new Group());
+        final Order order = new Order(new Group(), playersLimit);
         while(!clansInputQ.isEmpty()) {
             Group currentGroup = order.peek();
             Clan clanToAdd = clansInputQ.poll();
             int availableSlots = GameQueueUtils.getGroupAvailableSlots(currentGroup,playersLimit);
             if(clanToAdd.getNumberOfPlayers() <= availableSlots){
                 currentGroup.offer(clanToAdd);
+                try{
+                    availableSlots = GameQueueUtils.getGroupAvailableSlots(currentGroup,playersLimit);
+                }catch (Exception ex){
+                    throw ex;
+                }
             }else{
                 Group newGroup = new Group();
                 newGroup.offer(clanToAdd);
@@ -31,6 +36,7 @@ public class OnlineGameServiceImpl implements OnlineGameService {
             }
         }
         order.compareLastTwoAddedGroups();
+        order.sortByNumberOfPlayersDesc();
         return order;
     }
     public Players generatePlayers(int groupCount, int numberOfClans, int maxPoints){
