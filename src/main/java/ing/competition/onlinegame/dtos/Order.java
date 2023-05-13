@@ -114,11 +114,7 @@ public class Order extends AbstractQueue<Group> {
     }
 
     public void sortByNumberOfPlayersDesc() {
-        this.elements = new LinkedList<>(
-                this.elements.stream()
-                        .sorted(Comparators.sortGroupByNumberOfPlayersDesc())
-                        .toList()
-        );
+        this.elements.sort(Comparators.sortGroupByNumberOfPlayersDesc());
         this.evaluateOrder();
     }
 

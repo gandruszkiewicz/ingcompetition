@@ -1,5 +1,7 @@
 package ing.competition.onlinegame.dtos;
 
+import ing.competition.onlinegame.comparators.Comparators;
+
 import java.util.*;
 
 public class Group extends AbstractQueue<Clan> {
@@ -35,6 +37,7 @@ public class Group extends AbstractQueue<Clan> {
     public boolean offer(Clan t) {
         if (t == null) return false;
         this.elements.add(t);
+        this.elements.sort(Comparators.sortClanByClanFactorDesc());
         return true;
     }
 
