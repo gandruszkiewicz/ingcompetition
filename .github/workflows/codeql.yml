@@ -10,24 +10,15 @@
 # supported CodeQL languages.
 #
 name: "CodeQL"
+
 on:
   push:
     branches: [ master ]
-  workflow_call:
-    inputs:
-      languages:
-        description: "Optional input to set languages for CodeQL check. Supported values are: 'cpp', 'csharp', 'go', 'java', 'javascript', 'typescript', 'python', 'ruby'. To set multiple languages, use the same syntax as you can see in the default value."
-        required: false
-        type: string
-        default: "['javascript']"
-      codeql-cfg-path:
-        description: "Optional input to set path to a CodeQL config file"
-        required: false
-        type: string
-      build-command:
-        description: "Optional input to specify manual build command. The multiline syntax is supported"
-        required: false
-        type: string
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ master ]
+  schedule:
+    - cron: '39 22 * * 6'
 
 jobs:
   analyze:
@@ -41,29 +32,40 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ${{fromJson(inputs.languages)}}
+        language: [ 'java' ]
+        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
+        # Learn more:
+        # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v1
         with:
-          languages: ${{matrix.language}}
-          config-file: ${{inputs.codeql-cfg-path}}
+          languages: ${{ matrix.language }}
+          # If you wish to specify custom queries, you can do so here or in a config file.
+          # By default, queries listed here will override any specified in a config file.
+          # Prefix the list here with "+" to use these queries and those in the config file.
+          # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
       # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
-      # If this step fails, configure a build command manually using build-command input. This command will be executed in the corresponding step.
+      # If this step fails, then you should remove it and run the build manually (see below)
       - name: Autobuild
-        if: ${{!inputs.build-command}}
-        uses: github/codeql-action/autobuild@v2
+        uses: github/codeql-action/autobuild@v1
 
-      - name: Manual build
-        if: ${{inputs.build-command}}
-        run: |
-          ${{inputs.build-command}}
+      # ℹ️ Command-line programs to run using the OS shell.
+      # 📚 https://git.io/JvXDl
+
+      # ✏️ If the Autobuild fails above, remove it and uncomment the following three lines
+      #    and modify them (or add more) to build your code if your project
+      #    uses a compiled language
+
+      #- run: |
+      #   make bootstrap
+      #   make release
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v1
