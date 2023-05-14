@@ -28,7 +28,7 @@ public class OnlineGameRequirementsTests {
     @Test
     public void testGroups() throws JsonProcessingException {
         Players players = this.onlineGameService
-                .generatePlayers(10, 100, 100);
+                .generatePlayers(1000, 20000, 100);
         OrderHandler orderHandler = this.onlineGameService.calculateOrder(players);
         boolean hasOrderGroupEvalPos = true;
         for (int index = 0; index < orderHandler.size(); index++) {

@@ -9,9 +9,9 @@ import ing.competition.onlinegame.utils.GameQueueUtils;
 import java.util.*;
 
 public class OrderHandler {
-    private ArrayList<Group> elements = new ArrayList<>();
-    private int maxPlayersGroup;
-    private Queue<AvailableGroup> availableGroups = new LinkedList<>();
+    private final ArrayList<Group> elements = new ArrayList<>();
+    private final int maxPlayersGroup;
+    private final List<AvailableGroup> availableGroups = new LinkedList<>();
 
     public OrderHandler(Group queue, int maxPlayersGroup) {
         this.maxPlayersGroup = maxPlayersGroup;
