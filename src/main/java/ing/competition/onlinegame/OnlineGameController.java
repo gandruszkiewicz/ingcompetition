@@ -12,6 +12,7 @@ import org.jboss.resteasy.reactive.RestQuery;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -33,10 +34,14 @@ public class OnlineGameController {
     public List<Group> calculate(Players players) {
         log.info("Start calculation for amount of {} players and group size {}",
                 players.getClans().size(), players.getGroupCount());
+        if(players.getClans().isEmpty()){
+            log.info("There are no players in the request body. Return empty list");
+            return new ArrayList<>();
+        }
         long start = System.currentTimeMillis();
         OrderHandler result = this.onlineGameService.calculateOrder(players);
         long end = System.currentTimeMillis();
-        log.info("Finish calculation {}",(end - start));
+        log.info("Finish calculation. Processing takes {} milliseconds",(end - start));
         return result.getElements();
     }
 }

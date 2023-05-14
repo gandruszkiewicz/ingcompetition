@@ -11,6 +11,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("/transactions")
@@ -31,17 +32,14 @@ public class TransactionsController {
     @Blocking
     public RestResponse<List<Account>> report(List<Transaction> transactionList) {
         long start = System.currentTimeMillis();
-        log.debug("Start {}", start);
+        log.info("Start report of {} transactions", transactionList.size());
+        if(transactionList.isEmpty()){
+            log.info("There are no transaction in the request collection. Return empty list");
+            return RestResponse.ok(new ArrayList<>());
+        }
         List<Account> accounts = this.transactionService.getAccounts(transactionList);
         long end = System.currentTimeMillis();
-        log.debug("Finish {}", (end - start));
+        log.info("Finish report. Processing takes {} milliseconds", (end - start));
         return RestResponse.ok(accounts);
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public RestResponse<List<Transaction>> getTransactions() {
-        return RestResponse.ok(this.transactionService.generateTransactions());
     }
 }
