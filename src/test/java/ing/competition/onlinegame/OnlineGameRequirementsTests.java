@@ -3,7 +3,7 @@ package ing.competition.onlinegame;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ing.competition.onlinegame.dtos.Group;
-import ing.competition.onlinegame.dtos.Order;
+import ing.competition.onlinegame.handlers.OrderHandler;
 import ing.competition.onlinegame.dtos.Players;
 import ing.competition.onlinegame.service.OnlineGameService;
 import io.quarkus.test.junit.QuarkusTest;
@@ -29,11 +29,11 @@ public class OnlineGameRequirementsTests {
     public void testGroups() throws JsonProcessingException {
         Players players = this.onlineGameService
                 .generatePlayers(10, 100, 100);
-        Order order = this.onlineGameService.calculateOrder(players);
+        OrderHandler orderHandler = this.onlineGameService.calculateOrder(players);
         boolean hasOrderGroupEvalPos = true;
-        for (int index = 0; index < order.size(); index++) {
+        for (int index = 0; index < orderHandler.size(); index++) {
             if (index == 0) continue;
-            Group currentGroup = order.get(index);
+            Group currentGroup = orderHandler.get(index);
             boolean currentGroupEval = OnlineGameTestUtils.evaluateGroup(currentGroup);
             if (!currentGroupEval) {
                 this.wrongGroupEval(currentGroup);
@@ -50,12 +50,12 @@ public class OnlineGameRequirementsTests {
         Players players = this.onlineGameService.generatePlayers(
                 1000, 20000, 1000
         );
-        Order order = this.onlineGameService.calculateOrder(players);
+        OrderHandler orderHandler = this.onlineGameService.calculateOrder(players);
         boolean testOrderPos = true;
-        for (int index = 0; index < order.size(); index++) {
+        for (int index = 0; index < orderHandler.size(); index++) {
             if (index == 0) continue;
-            Group beforeGroup = order.get(index - 1);
-            Group currentGroup = order.get(index);
+            Group beforeGroup = orderHandler.get(index - 1);
+            Group currentGroup = orderHandler.get(index);
 
             //Check is before group stronger or have more players.
             boolean isBeforeGroupStronger = beforeGroup.getGroupFactor() > currentGroup.getGroupFactor();

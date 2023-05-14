@@ -1,4 +1,4 @@
-package ing.competition.transactions;
+package ing.competition.transactions.service;
 
 import ing.competition.transactions.dtos.Account;
 import ing.competition.transactions.dtos.Transaction;
@@ -12,18 +12,16 @@ import java.util.concurrent.Callable;
 
 @Slf4j
 public class TransactionTask implements Callable<List<Account>> {
-    private List<Transaction> transactions;
+    private final List<Transaction> transactions;
 
     public TransactionTask(List<Transaction> transactions) {
         this.transactions = transactions;
     }
 
     @Override
-    public List<Account> call() throws Exception {
+    public List<Account> call() {
         HashMap<String, Account> accountHashMap = new HashMap<>();
         Iterator<Transaction> iterator = transactions.iterator();
-        long start = System.currentTimeMillis();
-        log.debug("Processing transaction of thead start");
         while (iterator.hasNext()) {
             Transaction transaction = iterator.next();
             String creditAccount = transaction.getCreditAccount();
@@ -33,7 +31,6 @@ public class TransactionTask implements Callable<List<Account>> {
         }
         List<Account> accounts = new ArrayList<>(accountHashMap.values());
         long end = System.currentTimeMillis();
-        log.debug("Processing transaction of thead finished {}", (end - start));
         return accounts;
     }
 

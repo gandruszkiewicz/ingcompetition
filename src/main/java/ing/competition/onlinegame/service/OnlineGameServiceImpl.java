@@ -2,7 +2,7 @@ package ing.competition.onlinegame.service;
 
 import ing.competition.onlinegame.dtos.Clan;
 import ing.competition.onlinegame.dtos.Group;
-import ing.competition.onlinegame.dtos.Order;
+import ing.competition.onlinegame.handlers.OrderHandler;
 import ing.competition.onlinegame.dtos.Players;
 import ing.competition.onlinegame.utils.GameQueueUtils;
 
@@ -13,7 +13,7 @@ import java.util.Random;
 
 @ApplicationScoped
 public class OnlineGameServiceImpl implements OnlineGameService {
-    public Order calculateOrder(Players players) {
+    public OrderHandler calculateOrder(Players players) {
         final int playersLimit = players.getGroupCount();
         // 1. Sort desc collection of clans by factor - points divide on number of players.
         // This give us information of clan strength.
@@ -21,9 +21,9 @@ public class OnlineGameServiceImpl implements OnlineGameService {
         players.sortByClanFactor();
         // 2. Create queues, first is input queue from which will be populated order queue.
         final Group clansInputQ = new Group(players.getClans());
-        final Order order = new Order(new Group(), playersLimit);
+        final OrderHandler orderHandler = new OrderHandler(new Group(), playersLimit);
         while (!clansInputQ.isEmpty()) {
-            Group currentGroup = order.peek();
+            Group currentGroup = orderHandler.peek();
             Clan clanToAdd = clansInputQ.poll();
             int availableSlots = GameQueueUtils.getGroupAvailableSlots(currentGroup, playersLimit);
             if (clanToAdd.getNumberOfPlayers() <= availableSlots) {
@@ -31,12 +31,10 @@ public class OnlineGameServiceImpl implements OnlineGameService {
             } else {
                 Group newGroup = new Group();
                 newGroup.offer(clanToAdd);
-                order.offer(newGroup);
+                orderHandler.offer(newGroup);
             }
         }
-        order.compareLastTwoAddedGroups();
-        order.sortByNumberOfPlayersDesc();
-        return order;
+        return orderHandler;
     }
 
     public Players generatePlayers(int groupCount, int numberOfClans, int maxPoints) {

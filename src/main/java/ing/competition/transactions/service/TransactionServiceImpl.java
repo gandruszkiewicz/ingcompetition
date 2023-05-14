@@ -1,6 +1,5 @@
 package ing.competition.transactions.service;
 
-import ing.competition.transactions.TransactionTask;
 import ing.competition.transactions.comparators.Comparators;
 import ing.competition.transactions.dtos.Account;
 import ing.competition.transactions.dtos.Transaction;
@@ -38,12 +37,7 @@ public class TransactionServiceImpl implements TransactionService {
             throw new RuntimeException(e);
         }
         executorService.shutdown();
-        long end = System.currentTimeMillis();
-        log.debug("Finish {}", (end - start));
-        long startSort = System.currentTimeMillis();
         accounts.sort(Comparators.sortByBalanceAsc());
-        long endSort = System.currentTimeMillis();
-        log.debug("Finish sort {}", (endSort - startSort));
         return accounts;
     }
 

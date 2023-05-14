@@ -1,29 +1,22 @@
-package ing.competition.onlinegame.dtos;
+package ing.competition.onlinegame.handlers;
 
 import ing.competition.onlinegame.comparators.Comparators;
+import ing.competition.onlinegame.dtos.AvailableGroup;
+import ing.competition.onlinegame.dtos.Clan;
+import ing.competition.onlinegame.dtos.Group;
 import ing.competition.onlinegame.utils.GameQueueUtils;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-public class Order{
+public class OrderHandler {
     private ArrayList<Group> elements = new ArrayList<>();
     private int maxPlayersGroup;
     private Queue<AvailableGroup> availableGroups = new LinkedList<>();
 
-    public Order(Group queue, int maxPlayersGroup) {
+    public OrderHandler(Group queue, int maxPlayersGroup) {
         this.maxPlayersGroup = maxPlayersGroup;
         this.elements.add(queue);
     }
-    public Iterator<Group> iterator() {
-        return this.elements.iterator();
-    }
-
     public int size() {
         return elements.size();
     }
@@ -33,17 +26,6 @@ public class Order{
         if (clans == null) return false;
         this.elements.add(clans);
         return true;
-    }
-
-    public Group poll() {
-        Iterator<Group> iter = elements.iterator();
-        Group t = null;
-        if (iter.hasNext()) t = iter.next();
-        if (t != null) {
-            iter.remove();
-            return t;
-        }
-        return null;
     }
     public Group peek() {
         return this.getLast();
@@ -130,5 +112,10 @@ public class Order{
     }
     private Group getLast(){
         return this.elements.get(this.size() - 1);
+    }
+    public List<Group> getElements(){
+        this.compareLastTwoAddedGroups();
+        this.sortByNumberOfPlayersDesc();
+        return this.elements;
     }
 }
