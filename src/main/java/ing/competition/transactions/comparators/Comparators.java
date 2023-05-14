@@ -7,10 +7,10 @@ import java.util.Comparator;
 public class Comparators {
     public static Comparator<Account> sortByBalanceAsc() {
         return Comparator.comparingDouble(x -> {
-            try{
+            try {
                 var balance = x.getBalance();
                 return balance;
-            }catch (NullPointerException ex){
+            } catch (NullPointerException ex) {
                 throw ex;
             }
         });
