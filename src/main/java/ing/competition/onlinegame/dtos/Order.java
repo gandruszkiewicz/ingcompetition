@@ -11,8 +11,8 @@ import java.util.*;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Order extends AbstractQueue<Group> {
-    private LinkedList<Group> elements = new LinkedList<>();
+public class Order{
+    private ArrayList<Group> elements = new ArrayList<>();
     private int maxPlayersGroup;
     private Queue<AvailableGroup> availableGroups = new LinkedList<>();
 
@@ -20,18 +20,14 @@ public class Order extends AbstractQueue<Group> {
         this.maxPlayersGroup = maxPlayersGroup;
         this.elements.add(queue);
     }
-
-    @Override
     public Iterator<Group> iterator() {
         return this.elements.iterator();
     }
 
-    @Override
     public int size() {
         return elements.size();
     }
 
-    @Override
     public boolean offer(Group clans) {
         this.compareLastTwoAddedGroups();
         if (clans == null) return false;
@@ -39,7 +35,6 @@ public class Order extends AbstractQueue<Group> {
         return true;
     }
 
-    @Override
     public Group poll() {
         Iterator<Group> iter = elements.iterator();
         Group t = null;
@@ -50,10 +45,8 @@ public class Order extends AbstractQueue<Group> {
         }
         return null;
     }
-
-    @Override
     public Group peek() {
-        return this.elements.getLast();
+        return this.getLast();
     }
 
     public Group get(int index) {
@@ -61,7 +54,7 @@ public class Order extends AbstractQueue<Group> {
     }
 
     private void checkAvailableGroups() {
-        Group last = this.elements.getLast();
+        Group last = this.getLast();
         if (this.availableGroups.size() > 0) {
             List<AvailableGroup> availableGroupsToDel = new ArrayList<>();
             for (AvailableGroup availableGroup : this.availableGroups) {
@@ -78,7 +71,7 @@ public class Order extends AbstractQueue<Group> {
     }
 
     private void nextToLastFulfill() {
-        Group last = this.elements.getLast();
+        Group last = this.getLast();
         int lastIndex = this.elements.size() - 1;
         int nextToLastIndex = this.elements.size() - 2;
         Group nextToLast = this.elements.get(nextToLastIndex);
@@ -96,7 +89,7 @@ public class Order extends AbstractQueue<Group> {
 
     public void compareLastTwoAddedGroups() {
         this.checkAvailableGroups();
-        Group last = this.elements.getLast();
+        Group last = this.getLast();
         int lastIndex = this.elements.size() - 1;
         int nextToLastIndex = this.elements.size() - 2;
         if (nextToLastIndex < 0 || lastIndex == 0) {
@@ -134,5 +127,8 @@ public class Order extends AbstractQueue<Group> {
                 this.replaceGroups(index, currentGroup, nextToLastIndex, previousGroup);
             }
         }
+    }
+    private Group getLast(){
+        return this.elements.get(this.size() - 1);
     }
 }
