@@ -34,6 +34,8 @@ public class OnlineGameServiceImpl implements OnlineGameService {
                 orderHandler.offer(newGroup);
             }
         }
+        orderHandler.compareLastTwoAddedGroups();
+        orderHandler.sortByNumberOfPlayersDesc();
         return orderHandler;
     }
 

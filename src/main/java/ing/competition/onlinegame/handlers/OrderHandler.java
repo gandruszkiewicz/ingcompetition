@@ -114,8 +114,6 @@ public class OrderHandler {
         return this.elements.get(this.size() - 1);
     }
     public List<Group> getElements(){
-        this.compareLastTwoAddedGroups();
-        this.sortByNumberOfPlayersDesc();
         return this.elements;
     }
 }
