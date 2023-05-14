@@ -1,5 +1,6 @@
 package ing.competition.transactions.service;
 
+import ing.competition.exceptions.CustomRuntimeException;
 import ing.competition.transactions.comparators.Comparators;
 import ing.competition.transactions.dtos.Account;
 import ing.competition.transactions.dtos.Transaction;
@@ -19,8 +20,8 @@ import java.util.concurrent.Future;
 @ApplicationScoped
 @Slf4j
 public class TransactionServiceImpl implements TransactionService {
+    private final Random random = new Random();
     public List<Account> getAccounts(List<Transaction> transactions) {
-        long start = System.currentTimeMillis();
         List<Account> accounts = new ArrayList<>();
         ExecutorService executorService = Executors.newCachedThreadPool();
         var batches = StreamUtils.batches(transactions, 10000).toList();
@@ -34,7 +35,8 @@ public class TransactionServiceImpl implements TransactionService {
                 accounts.addAll(future.get());
             }
         } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
+            log.error("Error occurred TransactionServiceImpl.getAccounts {}",e.getMessage());
+            Thread.currentThread().interrupt();
         }
         executorService.shutdown();
         accounts.sort(Comparators.sortByBalanceAsc());
@@ -45,7 +47,6 @@ public class TransactionServiceImpl implements TransactionService {
         int numberOfTransactions = 100000;
         List<String> accounts = this.generateAccounts();
         List<Transaction> transactions = new ArrayList<>();
-        Random random = new Random();
         float maxAmount = 1000000;
         for (int transactionIndex = 1; transactionIndex <= numberOfTransactions / 2; transactionIndex++) {
             int indexCredit = random.nextInt(accounts.size());
@@ -68,7 +69,6 @@ public class TransactionServiceImpl implements TransactionService {
     public List<String> generateAccounts() {
         int numberOfAccounts = 1000;
         HashMap<String, ?> accounts = new HashMap<>();
-        Random random = new Random();
         int max = 100000;
         int min = 1000000000;
         for (int account = 1; account <= numberOfAccounts; account++) {

@@ -3,14 +3,17 @@ package ing.competition.transactions.dtos;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.json.bind.annotation.JsonbProperty;
+
 @Getter
 @Setter
 public class Account {
     public Account(String account){
-        this.account = account;
+        this.accountNumber = account;
         this.balance = 0.00f;
     }
-    private String account;
+    @JsonbProperty("account")
+    private String accountNumber;
     private int debitCount;
     private int creditCount;
     private float balance;
@@ -28,12 +31,12 @@ public class Account {
         }
     }
     private boolean compareAccounts(String transactionAccount){
-        return this.account.equals(transactionAccount);
+        return this.accountNumber.equals(transactionAccount);
     }
     private void validateComparison(boolean isDebitAccount, boolean isCreditAccount, Transaction transaction){
         String accountTransactionInfo = String.format(
                 "Account number: %s, transaction: creditAccount - %s, debitAccount - %s",
-                this.account, transaction.getCreditAccount(), transaction.getDebitAccount()
+                this.accountNumber, transaction.getCreditAccount(), transaction.getDebitAccount()
         );
         if(isCreditAccount && isDebitAccount){
             throw new IllegalArgumentException(

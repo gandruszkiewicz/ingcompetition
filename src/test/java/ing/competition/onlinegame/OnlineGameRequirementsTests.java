@@ -15,7 +15,7 @@ import javax.inject.Inject;
 
 @Slf4j
 @QuarkusTest
-public class OnlineGameRequirementsTests {
+class OnlineGameRequirementsTests {
     private final OnlineGameService onlineGameService;
     private final ObjectMapper objectMapper;
 
@@ -26,7 +26,7 @@ public class OnlineGameRequirementsTests {
     }
 
     @Test
-    public void testGroups() throws JsonProcessingException {
+    void testGroups() throws JsonProcessingException {
         Players players = this.onlineGameService
                 .generatePlayers(1000, 20000, 100);
         OrderHandler orderHandler = this.onlineGameService.calculateOrder(players);
@@ -45,7 +45,7 @@ public class OnlineGameRequirementsTests {
     }
 
     @Test
-    public void testOrder() throws JsonProcessingException {
+    void testOrder() throws JsonProcessingException {
 
         Players players = this.onlineGameService.generatePlayers(
                 1000, 20000, 1000
@@ -80,137 +80,5 @@ public class OnlineGameRequirementsTests {
     private void wrongGroupEval(Group group) throws JsonProcessingException {
         String groupJson = this.objectMapper.writeValueAsString(group.getClanList());
         log.debug("Group has wrong order {}", groupJson);
-    }
-
-    private String getJsonPlayers() {
-        return "{\n" +
-                "    \"groupCount\": 4,\n" +
-                "    \"clans\": [\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 1,\n" +
-                "            \"points\": 76\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 1,\n" +
-                "            \"points\": 71\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 1,\n" +
-                "            \"points\": 69\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 1,\n" +
-                "            \"points\": 69\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 1,\n" +
-                "            \"points\": 65\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 1,\n" +
-                "            \"points\": 62\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 1,\n" +
-                "            \"points\": 60\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 1,\n" +
-                "            \"points\": 47\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 2,\n" +
-                "            \"points\": 89\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 1,\n" +
-                "            \"points\": 43\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 2,\n" +
-                "            \"points\": 76\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 1,\n" +
-                "            \"points\": 37\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 3,\n" +
-                "            \"points\": 93\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 3,\n" +
-                "            \"points\": 92\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 2,\n" +
-                "            \"points\": 61\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 3,\n" +
-                "            \"points\": 87\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 3,\n" +
-                "            \"points\": 86\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 3,\n" +
-                "            \"points\": 82\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 3,\n" +
-                "            \"points\": 76\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 3,\n" +
-                "            \"points\": 60\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 2,\n" +
-                "            \"points\": 39\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 3,\n" +
-                "            \"points\": 53\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 3,\n" +
-                "            \"points\": 45\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 3,\n" +
-                "            \"points\": 40\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 3,\n" +
-                "            \"points\": 36\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 3,\n" +
-                "            \"points\": 38\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 2,\n" +
-                "            \"points\": 12\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 3,\n" +
-                "            \"points\": 14\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 3,\n" +
-                "            \"points\": 12\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 3,\n" +
-                "            \"points\": 7\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"numberOfPlayers\": 2,\n" +
-                "            \"points\": 5\n" +
-                "        }\n" +
-                "    ]\n" +
-                "}";
     }
 }

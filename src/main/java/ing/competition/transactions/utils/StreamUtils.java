@@ -5,6 +5,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class StreamUtils {
+    private StreamUtils(){}
     public static <T> Stream<List<T>> batches(List<T> source, int length) {
         if (length <= 0)
             throw new IllegalArgumentException("length = " + length);

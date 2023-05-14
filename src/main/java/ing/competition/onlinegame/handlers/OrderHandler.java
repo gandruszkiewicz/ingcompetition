@@ -37,11 +37,11 @@ public class OrderHandler {
 
     private void checkAvailableGroups() {
         Group last = this.getLast();
-        if (this.availableGroups.size() > 0) {
+        if (this.availableGroups.isEmpty()) {
             List<AvailableGroup> availableGroupsToDel = new ArrayList<>();
             for (AvailableGroup availableGroup : this.availableGroups) {
                 List<Clan> clansToSwitch = last.getByNumerOfPlayers(availableGroup.getAvailableSlots());
-                if (clansToSwitch.size() == 0) break;
+                if (clansToSwitch.isEmpty()) break;
                 Group groupToOffer = this.elements.get(availableGroup.getOrderIndex());
                 for (Clan clanToSwitch : clansToSwitch) {
                     groupToOffer.offer(clanToSwitch);
@@ -83,7 +83,7 @@ public class OrderHandler {
         }
         this.nextToLastFulfill();
         nextToLast = this.elements.get(this.elements.size() - 2);
-        if (nextToLast.size() == 0) {
+        if (nextToLast.isEmpty()) {
             this.elements.remove(nextToLast);
         }
     }

@@ -13,6 +13,7 @@ import java.util.Random;
 
 @ApplicationScoped
 public class OnlineGameServiceImpl implements OnlineGameService {
+    private final Random random = new Random();
     public OrderHandler calculateOrder(Players players) {
         final int playersLimit = players.getGroupCount();
         // 1. Sort desc collection of clans by factor - points divide on number of players.
@@ -44,7 +45,6 @@ public class OnlineGameServiceImpl implements OnlineGameService {
         final List<Clan> clans = new ArrayList<>();
         players.setGroupCount(groupCount);
         for (int index = 0; index < numberOfClans; index++) {
-            Random random = new Random();
             Clan clan = new Clan();
             int points = random.nextInt(maxPoints - 1) + 1;
             int numberOfPlayers = random.nextInt(groupCount);

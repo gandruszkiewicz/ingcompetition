@@ -20,8 +20,9 @@ public class ATM {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ATM) {
-            ATM temp = (ATM) obj;
+        if(obj == null) return false;
+        if(this.getClass() == obj.getClass()){
+            ATM temp = (ATM)obj;
             return this.getRegion() == temp.getRegion() && this.getAtmId() == temp.getAtmId();
         }
         return false;

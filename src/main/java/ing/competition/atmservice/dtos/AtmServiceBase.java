@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 abstract class AtmServiceBase {
-    public int region;
-    public int atmId;
+    private int region;
+    private int atmId;
 }

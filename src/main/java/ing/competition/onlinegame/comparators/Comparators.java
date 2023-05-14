@@ -7,6 +7,7 @@ import ing.competition.onlinegame.utils.ClanUtils;
 import java.util.Comparator;
 
 public class Comparators {
+    private Comparators(){}
     public static Comparator<Clan> sortClanByClanFactorDesc() {
         return Comparator.comparingDouble(ClanUtils::calculateClanFactorReversed);
     }

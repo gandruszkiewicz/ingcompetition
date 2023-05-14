@@ -29,9 +29,7 @@ public class TransactionTask implements Callable<List<Account>> {
             this.processTransaction(accountHashMap, transaction, creditAccount);
             this.processTransaction(accountHashMap, transaction, debitAccount);
         }
-        List<Account> accounts = new ArrayList<>(accountHashMap.values());
-        long end = System.currentTimeMillis();
-        return accounts;
+        return new ArrayList<>(accountHashMap.values());
     }
 
     private void processTransaction(HashMap<String, Account> accountHashMap, Transaction transaction, String accountNumber) {

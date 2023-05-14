@@ -25,8 +25,7 @@ public class Group extends AbstractQueue<Clan> {
     }
 
     public int getNumberOfPlayers() {
-        var result = elements.stream().map(Clan::getNumberOfPlayers).mapToInt(p -> p).sum();
-        return result;
+        return elements.stream().map(Clan::getNumberOfPlayers).mapToInt(p -> p).sum();
     }
 
     public int getNumberOfPlayersReversed() {
