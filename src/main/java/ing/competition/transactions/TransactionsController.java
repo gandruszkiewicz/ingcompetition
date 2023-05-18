@@ -51,7 +51,7 @@ public class TransactionsController {
             log.info("There are no transaction in the request collection. Return empty list");
             return RestResponse.ok(this.objectMapper.writeValueAsString(new ArrayList<>()));
         }
-        List<Account> accounts = new ArrayList<>();
+        List<Account> accounts;
        try{
            accounts = this.transactionService.getAccounts(transactionList);
        }catch (Exception ex){
