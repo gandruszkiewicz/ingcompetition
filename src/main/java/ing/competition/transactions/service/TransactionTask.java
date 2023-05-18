@@ -9,30 +9,30 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class TransactionTask implements Callable<List<Account>> {
     private final List<Transaction> transactions;
-
-    public TransactionTask(List<Transaction> transactions) {
+    private final ConcurrentHashMap<String,Account> concurrentHashMap;
+    public TransactionTask(List<Transaction> transactions, ConcurrentHashMap<String, Account> concurrentHashMap) {
         this.transactions = transactions;
+        this.concurrentHashMap = concurrentHashMap;
     }
 
     @Override
     public List<Account> call() {
-        HashMap<String, Account> accountHashMap = new HashMap<>();
-        Iterator<Transaction> iterator = transactions.iterator();
+        var iterator = transactions.iterator();
         while (iterator.hasNext()) {
             Transaction transaction = iterator.next();
-            String creditAccount = transaction.getCreditAccount();
-            String debitAccount = transaction.getDebitAccount();
-            this.processTransaction(accountHashMap, transaction, creditAccount);
-            this.processTransaction(accountHashMap, transaction, debitAccount);
+            this.processTransaction(this.concurrentHashMap, transaction, transaction.getCreditAccount());
+            this.processTransaction(this.concurrentHashMap, transaction, transaction.getDebitAccount());
         }
-        return new ArrayList<>(accountHashMap.values());
+        return new ArrayList<>();
     }
 
-    private void processTransaction(HashMap<String, Account> accountHashMap, Transaction transaction, String accountNumber) {
+    private void processTransaction(ConcurrentHashMap<String,Account> accountHashMap,
+                                    Transaction transaction, String accountNumber) {
         if (!accountHashMap.containsKey(accountNumber)) {
             this.addAccount(accountHashMap, transaction, accountNumber);
         } else {
@@ -40,7 +40,7 @@ public class TransactionTask implements Callable<List<Account>> {
         }
     }
 
-    private void addAccount(HashMap<String, Account> accountHashMap, Transaction transaction, String accountNumber) {
+    private void addAccount(ConcurrentHashMap<String,Account> accountHashMap, Transaction transaction, String accountNumber) {
         Account account = new Account(accountNumber);
         account.addTransaction(transaction);
         accountHashMap.put(accountNumber, account);

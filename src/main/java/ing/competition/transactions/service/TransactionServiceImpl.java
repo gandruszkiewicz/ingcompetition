@@ -8,39 +8,31 @@ import ing.competition.transactions.utils.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.*;
+import java.util.concurrent.*;
 
 @ApplicationScoped
 @Slf4j
 public class TransactionServiceImpl implements TransactionService {
     private final Random random = new Random();
     public List<Account> getAccounts(List<Transaction> transactions) {
-        List<Account> accounts = new ArrayList<>();
+        ConcurrentHashMap<String, Account> concurrentHashMap = new ConcurrentHashMap();
         ExecutorService executorService = Executors.newCachedThreadPool();
         var batches = StreamUtils.batches(transactions, 10000).toList();
         List<TransactionTask> transactionTasks = new ArrayList<>();
         for (var batch : batches) {
-            transactionTasks.add(new TransactionTask(batch));
+            transactionTasks.add(new TransactionTask(batch, concurrentHashMap));
         }
         try {
             List<Future<List<Account>>> futures = executorService.invokeAll(transactionTasks);
-            for (Future<List<Account>> future : futures) {
-                accounts.addAll(future.get());
-            }
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException e) {
             log.error("Error occurred TransactionServiceImpl.getAccounts {}",e.getMessage());
             Thread.currentThread().interrupt();
         }
         executorService.shutdown();
-        accounts.sort(Comparators.sortByBalanceAsc());
-        return accounts;
+        ArrayList<Account> list = new ArrayList<>(concurrentHashMap.values());
+        list.sort(Comparators.sortByBalanceAsc());
+        return list;
     }
 
     public List<Transaction> generateTransactions() {
