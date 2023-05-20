@@ -57,10 +57,4 @@ public class TransactionsController {
         log.info("Finish report. Processing takes {} milliseconds", (end - start));
         return RestResponse.ok(this.objectMapper.writeValueAsString(accounts));
     }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public RestResponse<List<Transaction>> generate(){
-        return RestResponse.ok(this.transactionService.generateTransactions());
-    }
 }

@@ -1,9 +1,8 @@
 package ing.competition.transactions.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.json.bind.annotation.JsonbProperty;
 
 @Getter
 @Setter
@@ -12,7 +11,7 @@ public class Account {
         this.accountNumber = account;
         this.balance = 0.00f;
     }
-    @JsonbProperty("account")
+    @JsonProperty("account")
     private String accountNumber;
     private int debitCount;
     private int creditCount;

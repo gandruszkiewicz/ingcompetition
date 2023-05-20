@@ -1,5 +1,7 @@
 package ing.competition.onlinegame;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ing.competition.onlinegame.dtos.Group;
 import ing.competition.onlinegame.handlers.OrderHandler;
 import ing.competition.onlinegame.dtos.Players;
@@ -8,6 +10,7 @@ import io.quarkus.vertx.http.Compressed;
 import io.smallrye.common.annotation.Blocking;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.resteasy.reactive.RestQuery;
+import org.jboss.resteasy.reactive.RestResponse;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -19,10 +22,12 @@ import java.util.List;
 @Path("/onlinegame")
 public class OnlineGameController {
     private final OnlineGameService onlineGameService;
+    private final ObjectMapper objectMapper;
 
     @Inject
-    public OnlineGameController(OnlineGameService onlineGameService){
+    public OnlineGameController(OnlineGameService onlineGameService, ObjectMapper objectMapper){
         this.onlineGameService = onlineGameService;
+        this.objectMapper = objectMapper;
     }
 
     @POST
@@ -31,17 +36,23 @@ public class OnlineGameController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Compressed
     @Blocking
-    public List<Group> calculate(Players players) {
+    public RestResponse<String> calculate(String playersPayload) throws JsonProcessingException {
+        Players players = this.objectMapper.readValue(playersPayload, Players.class);
         log.info("Start calculation for amount of {} players and group size {}",
                 players.getClans().size(), players.getGroupCount());
         if(players.getClans().isEmpty()){
             log.info("There are no players in the request body. Return empty list");
-            return new ArrayList<>();
+            return RestResponse.ok(this.objectMapper.writeValueAsString(List.of()));
         }
         long start = System.currentTimeMillis();
         OrderHandler result = this.onlineGameService.calculateOrder(players);
         long end = System.currentTimeMillis();
         log.info("Finish calculation. Processing takes {} milliseconds",(end - start));
-        return result.getElements();
+        return RestResponse.ok(this.objectMapper.writeValueAsString(result.getElements()));
+    }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Players generate(){
+        return this.onlineGameService.generatePlayers(1000,20000,1000);
     }
 }

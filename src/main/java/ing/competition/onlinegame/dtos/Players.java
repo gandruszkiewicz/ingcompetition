@@ -1,5 +1,6 @@
 package ing.competition.onlinegame.dtos;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import ing.competition.onlinegame.comparators.Comparators;
 import lombok.Getter;
 import lombok.Setter;
