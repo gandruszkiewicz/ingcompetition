@@ -2,20 +2,17 @@ package ing.competition.onlinegame;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ing.competition.onlinegame.dtos.Group;
 import ing.competition.onlinegame.handlers.OrderHandler;
 import ing.competition.onlinegame.dtos.Players;
 import ing.competition.onlinegame.service.OnlineGameService;
 import io.quarkus.vertx.http.Compressed;
 import io.smallrye.common.annotation.Blocking;
 import lombok.extern.slf4j.Slf4j;
-import org.jboss.resteasy.reactive.RestQuery;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j

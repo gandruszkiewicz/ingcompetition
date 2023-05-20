@@ -5,7 +5,6 @@ import ing.competition.transactions.dtos.Transaction;
 import ing.competition.transactions.service.TransactionService;
 import io.quarkus.test.junit.QuarkusTest;
 import lombok.extern.slf4j.Slf4j;
-import org.jboss.resteasy.reactive.common.util.StreamUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +29,7 @@ public class TransactionTests {
         long start = System.currentTimeMillis();
         List<Account> accounts = this.transactionService.getAccounts(transactionList);
         long end = System.currentTimeMillis();
-        log.info("Get accounts takes {} miliseconds", (end - start));
+        log.info("Get accounts takes {} milliseconds", (end - start));
 
         // Check if there are any duplicates
         List<String> duplicates = this.getDuplicates(accounts);
@@ -48,9 +47,7 @@ public class TransactionTests {
             if(index == 0) continue;
             float current = accounts.get(index).getBalance();
             float previous = accounts.get(index - 1).getBalance();
-            if(current >= previous){
-                continue;
-            }else {
+            if(current <= previous){
                 isTrue = false;
                 log.info("Order req failed at {}", index);
                 break;

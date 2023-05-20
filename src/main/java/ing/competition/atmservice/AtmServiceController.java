@@ -38,7 +38,7 @@ public class AtmServiceController {
         final Task[] order = this.objectMapper.readValue(orderPayload, Task[].class);
         final ATM[] atms = this.atmService.calculateOrder(order);
         long end = System.currentTimeMillis();
-        log.info("Finish ATMS/calculateOrder.... takes {} miliseconds", (end - start));
+        log.info("Finish ATMS/calculateOrder.... takes {} milliseconds", (end - start));
         return RestResponse.ok(this.objectMapper.writeValueAsString(atms));
     }
 }

@@ -1,7 +1,6 @@
 package ing.competition.transactions;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ing.competition.transactions.dtos.Account;
 import ing.competition.transactions.dtos.Transaction;
@@ -14,7 +13,6 @@ import org.jboss.resteasy.reactive.RestResponse;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

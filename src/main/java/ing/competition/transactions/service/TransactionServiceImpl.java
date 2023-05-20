@@ -1,6 +1,5 @@
 package ing.competition.transactions.service;
 
-import ing.competition.exceptions.CustomRuntimeException;
 import ing.competition.transactions.comparators.Comparators;
 import ing.competition.transactions.dtos.Account;
 import ing.competition.transactions.dtos.Transaction;
@@ -16,7 +15,7 @@ import java.util.concurrent.*;
 public class TransactionServiceImpl implements TransactionService {
     private final Random random = new Random();
     public List<Account> getAccounts(List<Transaction> transactions) {
-        ConcurrentHashMap<String, Account> concurrentHashMap = new ConcurrentHashMap();
+        ConcurrentHashMap<String, Account> concurrentHashMap = new ConcurrentHashMap<String,Account>();
         ExecutorService executorService = Executors.newCachedThreadPool();
         var batches = StreamUtils.batches(transactions, 10000).toList();
         List<TransactionTask> transactionTasks = new ArrayList<>();
@@ -24,7 +23,7 @@ public class TransactionServiceImpl implements TransactionService {
             transactionTasks.add(new TransactionTask(batch, concurrentHashMap));
         }
         try {
-            List<Future<List<Account>>> futures = executorService.invokeAll(transactionTasks);
+            executorService.invokeAll(transactionTasks);
         } catch (InterruptedException e) {
             log.error("Error occurred TransactionServiceImpl.getAccounts {}",e.getMessage());
             Thread.currentThread().interrupt();

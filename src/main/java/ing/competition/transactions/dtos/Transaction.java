@@ -1,6 +1,5 @@
 package ing.competition.transactions.dtos;
 
-import ing.competition.atmservice.dtos.ATM;
 import lombok.Getter;
 import lombok.Setter;
 

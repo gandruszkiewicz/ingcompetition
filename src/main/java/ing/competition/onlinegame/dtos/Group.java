@@ -39,10 +39,10 @@ public class Group extends AbstractQueue<Clan> {
         this.elements.sort(Comparators.sortClanByClanFactorDesc());
         return true;
     }
-
-    public Clan get(int index) {
-        return this.elements.get(index);
-    }
+//
+//    public Clan get(int index) {
+//        return this.elements.get(index);
+//    }
 
     @Override
     public Clan poll() {
