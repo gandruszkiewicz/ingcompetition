@@ -39,13 +39,8 @@ public class TransactionsController {
     @Blocking
     public RestResponse<String> report(String transactionPayload) throws JsonProcessingException {
         long start = System.currentTimeMillis();
-
-
         List<Transaction> transactionList = Arrays.stream(this.objectMapper.readValue(transactionPayload, Transaction[].class))
                 .toList();
-        long end = System.currentTimeMillis();
-        log.info("Finish parsing {}", (end - start));
-        start = System.currentTimeMillis();
         log.info("Start report of {} transactions", transactionList.size());
         if(transactionList.isEmpty()){
             log.info("There are no transaction in the request collection. Return empty list");
@@ -58,8 +53,14 @@ public class TransactionsController {
            log.error("Error occurred during report generating {}", ex.getMessage());
            throw ex;
        }
-        end = System.currentTimeMillis();
+        long end = System.currentTimeMillis();
         log.info("Finish report. Processing takes {} milliseconds", (end - start));
         return RestResponse.ok(this.objectMapper.writeValueAsString(accounts));
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public RestResponse<List<Transaction>> generate(){
+        return RestResponse.ok(this.transactionService.generateTransactions());
     }
 }

@@ -36,7 +36,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     public List<Transaction> generateTransactions() {
-        int numberOfTransactions = 100000;
+        int numberOfTransactions = 150000;
         List<String> accounts = this.generateAccounts();
         List<Transaction> transactions = new ArrayList<>();
         float maxAmount = 1000000;
